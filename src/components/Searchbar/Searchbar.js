@@ -3,9 +3,6 @@ import { AiFillAlert } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// const API_KEY = '24793371-9eea329880a97afb5c057777f';
-// const BASE_URL = 'https://pixabay.com/api/';
-
 class Searchbar extends Component {
   state = {
     searchPictures: '',
@@ -23,12 +20,6 @@ class Searchbar extends Component {
     this.props.onSubmit(this.state.searchPictures);
     this.setState({ searchPictures: '' });
   };
-
-  //   componentDidMount() {
-  //     fetch(`${BASE_URL}?key=${API_KEY}&q=cat&image_type=photo&per_page=12`)
-  //       .then(res => res.json())
-  //       .then(searchPictures => this.setState({ searchPictures }));
-  //   }
 
   render() {
     return (
@@ -50,7 +41,6 @@ class Searchbar extends Component {
             onChange={this.handlePicturesChange}
           />
         </form>
-        {/* <ImageGallery searchPictures={this.state.searchPictures} /> */}
       </header>
     );
   }
