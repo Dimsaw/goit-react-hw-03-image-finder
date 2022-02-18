@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify';
 import { Oval } from 'react-loader-spinner';
+import Modal from './components/Modal';
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
 import fetchImages from './API-services';
@@ -23,6 +24,9 @@ class App extends Component {
     page: 1,
     message: '',
     status: Status.IDLE,
+    showModal: false,
+    url: '',
+    tags: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -32,18 +36,19 @@ class App extends Component {
     const nextPage = this.state.page;
 
     if (prevName !== nextName || prevPage !== nextPage) {
-      console.log('erre');
       this.setState({ status: Status.PENDING, loading: true });
 
       fetchImages(nextName, nextPage)
         .then(images => {
           this.setState(prevState => {
             return {
-              images: [...prevState.images, ...images.hits],
               status: Status.RESOLVED,
+              images: [...prevState.images, ...images.hits],
+
               Loading: true,
             };
           });
+          this.handleScroll();
           if (images.hits.length === 0) {
             this.setState({ loading: false });
             toast.error(
@@ -63,31 +68,76 @@ class App extends Component {
     }
   }
 
-  handelFormSubmit = searchPictures => {
-    this.setState({ searchPictures, images: [] });
-  };
-
   increment = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
   };
 
+  handelFormSubmit = searchPictures => {
+    this.setState({ searchPictures, images: [] });
+  };
+
+  handleScroll = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
+  };
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
+
+  handleClick = (url, tags) => {
+    this.setState({ url, tags });
+    this.toggleModal();
+  };
+
   render() {
-    const { images, status, message, loading } = this.state;
+    const { images, status, message, loading, showModal, url, tags } =
+      this.state;
     return (
-      <div>
+      <>
         <Searchbar onSubmit={this.handelFormSubmit} />
         {status === 'idle' && <p>Enter name.</p>}
-        {status === 'resolved' && <ImageGallery images={images} />}
+
         {status === 'pending' && (
           <Oval color="#00BFFF" height={80} width={80} />
         )}
-        {status === 'rejected' && <div>{message}</div>}
 
-        {loading && <Button increment={this.increment} />}
+        {status === 'rejected' && <div>{message}</div>}
+        {loading && (
+          <>
+            <ImageGallery
+              images={images}
+              tags={tags}
+              onClick={this.handleClick}
+            />
+            {status === 'pending' && (
+              <Oval color="#00BFFF" height={80} width={80} />
+            )}
+            <Button increment={this.increment} />
+          </>
+        )}
+
+        {/* <ImageGallery
+            images={images}
+            tags={tags}
+            onClick={this.handleClick}
+          />
+
+          {loading && <Button increment={this.increment} />} */}
+
+        {showModal && (
+          <Modal onClose={this.toggleModal}>
+            <img className="imageLarge" alt={tags} src={url} />
+          </Modal>
+        )}
         <ToastContainer autoClose={3000} />
-      </div>
+      </>
     );
   }
 }

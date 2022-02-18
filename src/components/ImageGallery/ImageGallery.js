@@ -2,15 +2,15 @@
 import ImageGalleryItem from '../ImageGalleryItem';
 import s from './ImageGallery.module.css';
 
-function ImageGallery({ images }) {
+function ImageGallery({ images, onClick }) {
   return (
     <ul className={s.gallery}>
       {images.map(({ id, webformatURL, largeImageURL, tags }) => (
         <li key={id} className={s.item}>
           <ImageGalleryItem
+            onClick={() => onClick(largeImageURL)}
             webformatURL={webformatURL}
-            largeImageURL={largeImageURL}
-            tags={tags}
+            alt={tags}
           />
         </li>
       ))}
