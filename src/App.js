@@ -109,27 +109,10 @@ class App extends Component {
         )}
 
         {status === 'rejected' && <div>{message}</div>}
-        {loading && (
-          <>
-            <ImageGallery
-              images={images}
-              tags={tags}
-              onClick={this.handleClick}
-            />
-            {status === 'pending' && (
-              <Oval color="#00BFFF" height={80} width={80} />
-            )}
-            <Button increment={this.increment} />
-          </>
-        )}
 
-        {/* <ImageGallery
-            images={images}
-            tags={tags}
-            onClick={this.handleClick}
-          />
+        <ImageGallery images={images} tags={tags} onClick={this.handleClick} />
 
-          {loading && <Button increment={this.increment} />} */}
+        {loading && <Button increment={this.increment} />}
 
         {showModal && (
           <Modal onClose={this.toggleModal}>
