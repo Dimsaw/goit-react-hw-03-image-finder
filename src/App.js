@@ -22,6 +22,7 @@ class App extends Component {
     error: null,
     page: 1,
     message: '',
+    status: Status.IDLE,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -78,11 +79,12 @@ class App extends Component {
       <div>
         <Searchbar onSubmit={this.handelFormSubmit} />
         {status === 'idle' && <p>Enter name.</p>}
+        {status === 'resolved' && <ImageGallery images={images} />}
         {status === 'pending' && (
           <Oval color="#00BFFF" height={80} width={80} />
         )}
         {status === 'rejected' && <div>{message}</div>}
-        {status === 'resolved' && <ImageGallery images={images} />}
+
         {loading && <Button increment={this.increment} />}
         <ToastContainer autoClose={3000} />
       </div>

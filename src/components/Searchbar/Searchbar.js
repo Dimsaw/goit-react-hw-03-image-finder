@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { AiFillAlert } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import s from './Searchbar.module.css';
 
 class Searchbar extends Component {
   state = {
@@ -23,16 +24,16 @@ class Searchbar extends Component {
 
   render() {
     return (
-      <header class="searchbar">
-        <form class="form" onSubmit={this.handleSubmit}>
-          <button type="submit" class="button">
+      <header className={s.searchbar}>
+        <form className={s.form} onSubmit={this.handleSubmit}>
+          <button type="submit" className={s.button}>
             <span class="button-label">
               Search <AiFillAlert />
             </span>
           </button>
 
           <input
-            class="input"
+            className={s.input}
             type="text"
             autocomplete="off"
             // autofocus
