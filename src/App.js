@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { Oval } from 'react-loader-spinner';
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
 import fetchImages from './API-services';
+import Button from './components/Button';
 
 const Status = {
   IDLE: 'idle',
@@ -26,20 +29,36 @@ class App extends Component {
     const nextName = this.state.searchPictures;
     const prevPage = prevState.page;
     const nextPage = this.state.page;
+
     if (prevName !== nextName || prevPage !== nextPage) {
       console.log('erre');
-      this.setState({ status: Status.PENDING });
+      this.setState({ status: Status.PENDING, loading: true });
 
-      fetchImages(nextName)
-        .then(images =>
+      fetchImages(nextName, nextPage)
+        .then(images => {
           this.setState(prevState => {
             return {
               images: [...prevState.images, ...images.hits],
               status: Status.RESOLVED,
+              Loading: true,
             };
-          }),
-        )
-        .catch(error => this.setState({ message: 'finish' }));
+          });
+          if (images.hits.length === 0) {
+            this.setState({ loading: false });
+            toast.error(
+              'Sorry, there are no images matching your search query. Please try again.',
+            );
+          }
+
+          if (images.hits.length < 12 && images.hits.length >= 1) {
+            this.setState({ loading: false });
+            toast.error(
+              `We're sorry, but you've reached the end of search results.`,
+            );
+          }
+        })
+
+        .catch(error => this.setState({ message: 'ERROR' }));
     }
   }
 
@@ -54,15 +73,18 @@ class App extends Component {
   };
 
   render() {
-    const { images } = this.state;
+    const { images, status, message, loading } = this.state;
     return (
       <div>
         <Searchbar onSubmit={this.handelFormSubmit} />
-        <ImageGallery images={images} />
+        {status === 'idle' && <p>Enter name.</p>}
+        {status === 'pending' && (
+          <Oval color="#00BFFF" height={80} width={80} />
+        )}
+        {status === 'rejected' && <div>{message}</div>}
+        {status === 'resolved' && <ImageGallery images={images} />}
+        {loading && <Button increment={this.increment} />}
         <ToastContainer autoClose={3000} />
-        <button type="button" onClick={this.increment}>
-          load more
-        </button>
       </div>
     );
   }
