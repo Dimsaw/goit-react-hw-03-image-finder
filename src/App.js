@@ -7,6 +7,7 @@ import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
 import fetchImages from './API-services';
 import Button from './components/Button';
+import s from './App.module.css';
 
 const Status = {
   IDLE: 'idle',
@@ -55,8 +56,11 @@ class App extends Component {
               'Sorry, there are no images matching your search query. Please try again.',
             );
           }
-
-          if (images.hits.length < 12 && images.hits.length >= 1) {
+          const endPage = images.totalHits / images.hits.length;
+          if (
+            nextPage === endPage ||
+            (images.hits.length < 12 && images.hits.length >= 1)
+          ) {
             this.setState({ loading: false });
             toast.error(
               `We're sorry, but you've reached the end of search results.`,
@@ -102,7 +106,7 @@ class App extends Component {
     return (
       <>
         <Searchbar onSubmit={this.handelFormSubmit} />
-        {status === 'idle' && <p>Enter name.</p>}
+        {status === 'idle' && <p className={s.header}>Enter name.</p>}
 
         {status === 'pending' && (
           <Oval color="#00BFFF" height={80} width={80} />

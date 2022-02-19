@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { AiFillAlert } from 'react-icons/ai';
+import { GrSearch } from 'react-icons/gr';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './Searchbar.module.css';
@@ -29,7 +29,7 @@ class Searchbar extends Component {
           <form className={s.form} onSubmit={this.handleSubmit}>
             <button type="submit" className={s.button}>
               <span class="button-label">
-                Search <AiFillAlert />
+                Search <GrSearch />
               </span>
             </button>
 
