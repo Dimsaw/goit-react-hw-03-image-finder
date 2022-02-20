@@ -22,7 +22,7 @@ class App extends Component {
     images: [],
     loading: false,
     error: null,
-    page: 1,
+    page: '',
     message: '',
     status: Status.IDLE,
     showModal: false,
@@ -79,7 +79,7 @@ class App extends Component {
   };
 
   handelFormSubmit = searchPictures => {
-    this.setState({ searchPictures, images: [] });
+    this.setState({ searchPictures, images: [], page: 1 });
   };
 
   handleScroll = () => {
